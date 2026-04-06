@@ -554,8 +554,8 @@
         <input class="form-input" id="setup-phone" placeholder="+258 XX XXX XXXX" type="text">
       </div>
       <div class="form-group">
-        <label class="form-label">Verification ID</label>
-        <input class="form-input" id="setup-verif" value="ANGEL" type="text">
+        <label class="form-label"><a href="https://servicenow.churchofjesuschrist.org/missionarysupport?id=ms_kb_article_view&sysparm_article=KB0141213" target="_blank"> Verification ID</a></label>
+        <input class="form-input" id="setup-verif" value="" type="text">
       </div>
     </div>
     <div class="form-group">
@@ -1322,7 +1322,7 @@ function substitute(text, forEmail = true) {
   out = out.replace(/{{SYS_SECRETARY}}/g, setup.secretary_name || '[Secretary Name]');
   out = out.replace(/{{SYS_PHONE}}/g, setup.phone || '[Phone]');
   out = out.replace(/{{SYS_EMAIL}}/g, setup.email || '[Secretary Email]');
-  out = out.replace(/{{SYS_VERIF}}/g, setup.verif || 'ANGEL');
+  out = out.replace(/{{SYS_VERIF}}/g, setup.verif);
   const t = templates.find(x => x.id === activeTemplateId);
   if (t) {
     t.fields.forEach(f => {
@@ -1337,7 +1337,7 @@ function substitute(text, forEmail = true) {
 
 function substituteHtml(text) {
   let out = escapeHtml(text);
-  const sys = { SYS_MISSION: setup.mission_name, SYS_SECRETARY: setup.secretary_name, SYS_PHONE: setup.phone, SYS_EMAIL: setup.email, SYS_VERIF: setup.verif || 'ANGEL' };
+  const sys = { SYS_MISSION: setup.mission_name, SYS_SECRETARY: setup.secretary_name, SYS_PHONE: setup.phone, SYS_EMAIL: setup.email, SYS_VERIF: setup.verif };
   for (const [k, v] of Object.entries(sys)) {
     out = out.replace(new RegExp(`{{${k}}}`, 'g'), v ? escapeHtml(v) : `<span class="preview-placeholder">[${k}]</span>`);
   }
@@ -1381,7 +1381,7 @@ function openSettings(tab = 'tab-mission') {
   document.getElementById('s-secretary').value = setup.secretary_name || '';
   document.getElementById('s-phone').value = setup.phone || '';
   document.getElementById('s-email').value = setup.email || '';
-  document.getElementById('s-verif').value = setup.verif || 'ANGEL';
+  document.getElementById('s-verif').value = setup.verif;
 
   renderContactsList();
   renderTemplateList();
