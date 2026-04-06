@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission Email Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #111318;
+    --bg-sidebar: #0d0f14;
+    --bg-card: #1a1d26;
+    --bg-card-hover: #20232e;
+    --bg-modal: #181b24;
+    --bg-input: #12141a;
+    --accent: #c9a453;
+    --accent-dim: rgba(201,164,83,0.15);
+    --accent-glow: rgba(201,164,83,0.08);
+    --text-primary: #e4e5ed;
+    --text-secondary: #7b7e96;
+    --text-muted: #4a4d62;
+    --border: rgba(255,255,255,0.07);
+    --border-accent: rgba(201,164,83,0.3);
+    --success: #4caf82;
+    --danger: #cf6679;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  :root.light {
+    --bg: #f4f3f0;
+    --bg-sidebar: #eceae6;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f9f8f6;
+    --bg-modal: #ffffff;
+    --bg-input: #f4f3f0;
+    --accent: #a07828;
+    --accent-dim: rgba(160,120,40,0.1);
+    --accent-glow: rgba(160,120,40,0.07);
+    --text-primary: #1a1814;
+    --text-secondary: #5a5650;
+    --text-muted: #9e9a94;
+    --border: rgba(0,0,0,0.09);
+    --border-accent: rgba(160,120,40,0.35);
+    --success: #2d8a5e;
+    --danger: #b84057;
+    --shadow: 0 20px 60px rgba(0,0,0,0.12);
+  }
+
+  /* Theme toggle */
+  .theme-toggle {
+    width: 34px; height: 34px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+  .theme-toggle .icon-moon { display: block; }
+  .theme-toggle .icon-sun  { display: none; }
+  :root.light .theme-toggle .icon-moon { display: none; }
+  :root.light .theme-toggle .icon-sun  { display: block; }
+
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── LAYOUT ─── */
+  .app { display: flex; height: 100vh; overflow: hidden; }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: 270px;
+    min-width: 270px;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .sidebar-header {
+    padding: 22px 20px 18px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+    margin-bottom: 3px;
+  }
+
+  .logo span { font-style: italic; font-weight: 300; color: var(--text-secondary); font-size: 13px; display: block; letter-spacing: 0; }
+
+  .mission-badge {
+    margin-top: 10px;
+    padding: 6px 10px;
+    background: var(--accent-dim);
+    border: 1px solid var(--border-accent);
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .mission-badge:hover { background: rgba(201,164,83,0.22); }
+
+  .sidebar-search {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 8px 12px 8px 32px;
+    outline: none;
+    transition: border-color 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237b7e96' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 10px center;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--text-muted); }
+
+  .sidebar-nav { flex: 1; overflow-y: auto; padding: 10px 0; }
+  .sidebar-nav::-webkit-scrollbar { width: 4px; }
+  .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+  .sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .nav-category { padding: 14px 18px 4px; font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 18px;
+    cursor: pointer;
+    border-radius: 0;
+    transition: background 0.15s, color 0.15s;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 400;
+    position: relative;
+    border-left: 2px solid transparent;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--text-primary); }
+  .nav-item.active { background: var(--accent-glow); color: var(--accent); border-left-color: var(--accent); font-weight: 500; }
+  .nav-item .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); flex-shrink: 0; }
+  .nav-item.active .nav-dot { background: var(--accent); }
+
+  .sidebar-footer {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .btn-sidebar {
+    flex: 1;
+    padding: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  .btn-sidebar:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+
+  /* ─── MAIN ─── */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  .main-header {
+    height: 56px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .header-title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; color: var(--text-primary); }
+  .header-subtitle { font-size: 12px; color: var(--text-muted); margin-left: 2px; }
+  .header-spacer { flex: 1; }
+
+  .btn-icon {
+    width: 34px; height: 34px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .btn-icon:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+
+  .main-content { flex: 1; overflow-y: auto; padding: 28px; display: flex; gap: 24px; }
+  .main-content::-webkit-scrollbar { width: 4px; }
+  .main-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+  .empty-state-icon { font-size: 48px; opacity: 0.3; }
+  .empty-state h3 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 300; color: var(--text-secondary); }
+  .empty-state p { font-size: 13px; max-width: 280px; line-height: 1.7; }
+
+  /* ─── TEMPLATE FORM ─── */
+  .template-form { flex: 1; max-width: 640px; }
+  .template-preview-panel { width: 340px; flex-shrink: 0; }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .template-header { margin-bottom: 20px; }
+  .template-name { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; color: var(--text-primary); margin-bottom: 8px; }
+  .badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    border: 1px solid;
+  }
+  .badge-category { background: rgba(255,255,255,0.04); border-color: var(--border); color: var(--text-secondary); }
+  .badge-contact { background: var(--accent-dim); border-color: var(--border-accent); color: var(--accent); }
+
+  .form-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .contact-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .contact-select {
+    flex: 1;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 9px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237b7e96' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+  }
+  .contact-select:focus { border-color: var(--accent); }
+
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; letter-spacing: 0.3px; }
+  .form-input, .form-textarea {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 10px 13px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: vertical;
+  }
+  .form-input:focus, .form-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  .form-input::placeholder, .form-textarea::placeholder { color: var(--text-muted); }
+  .form-textarea { min-height: 80px; font-family: 'DM Mono', monospace; font-size: 12px; line-height: 1.6; }
+
+  .form-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: none;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #0d0f14;
+  }
+  .btn-primary:hover { background: #d4af62; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(201,164,83,0.3); }
+  .btn-secondary { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary); }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+  .btn-danger { background: rgba(207,102,121,0.15); border: 1px solid rgba(207,102,121,0.3); color: var(--danger); }
+  .btn-danger:hover { background: rgba(207,102,121,0.25); }
+  .btn-ghost { background: transparent; color: var(--text-secondary); border: none; padding: 6px 10px; font-size: 12px; }
+  .btn-ghost:hover { color: var(--accent); }
+
+  /* ─── PREVIEW ─── */
+  .preview-sticky { position: sticky; top: 0; }
+  .preview-label { font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; padding: 0 2px; }
+  .preview-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .preview-email-bar {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,0.2);
+  }
+  .preview-email-field { font-size: 11px; color: var(--text-muted); margin-bottom: 3px; display: flex; gap: 6px; }
+  .preview-email-field strong { color: var(--text-secondary); min-width: 40px; }
+  .preview-email-field span { color: var(--text-primary); font-size: 11px; }
+  .preview-body { padding: 16px; font-family: 'DM Mono', monospace; font-size: 11px; line-height: 1.75; color: var(--text-secondary); white-space: pre-wrap; max-height: 360px; overflow-y: auto; }
+  .preview-body::-webkit-scrollbar { width: 3px; }
+  .preview-body::-webkit-scrollbar-thumb { background: var(--border); }
+  .preview-placeholder { color: var(--accent); font-style: italic; }
+
+  /* ─── MODAL OVERLAY ─── */
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .overlay.active { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--bg-modal);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    width: 90%;
+    max-width: 520px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow);
+    transform: translateY(16px);
+    transition: transform 0.25s;
+  }
+  .overlay.active .modal { transform: translateY(0); }
+  .modal::-webkit-scrollbar { width: 4px; }
+  .modal::-webkit-scrollbar-thumb { background: var(--border); }
+
+  .modal-wide { max-width: 700px; }
+
+  .modal-header { margin-bottom: 28px; }
+  .modal-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; }
+  .modal-subtitle { font-size: 13px; color: var(--text-secondary); }
+  .modal-close { position: absolute; top: 20px; right: 20px; }
+
+  .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+
+  /* ─── SETUP ─── */
+  .setup-logo {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .setup-logo .logo { font-size: 28px; display: block; }
+  .setup-logo p { color: var(--text-secondary); font-size: 13px; margin-top: 6px; }
+
+  .setup-divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  /* ─── CONTACTS EDITOR ─── */
+  .contacts-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+  .contact-item {
+    display: flex; gap: 8px; align-items: center;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+  }
+  .contact-item input { background: transparent; border: none; color: var(--text-primary); font-family: inherit; font-size: 12px; outline: none; flex: 1; }
+  .contact-item input:first-of-type { max-width: 140px; font-weight: 500; }
+  .contact-sep { color: var(--text-muted); font-size: 11px; }
+
+  /* ─── FIELDS EDITOR ─── */
+  .fields-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+  .field-item {
+    display: flex; gap: 8px; align-items: center;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+  }
+  .field-item input { background: transparent; border: none; color: var(--text-primary); font-family: 'DM Mono', monospace; font-size: 11px; outline: none; }
+  .field-item input:nth-child(1) { width: 120px; color: var(--accent); }
+  .field-item input:nth-child(2) { flex: 1; }
+  .field-item input:nth-child(3) { flex: 1; color: var(--text-muted); }
+
+  /* ─── TABS ─── */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab { padding: 10px 16px; font-size: 13px; color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; font-weight: 500; }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab:hover:not(.active) { color: var(--text-primary); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-primary);
+    box-shadow: var(--shadow);
+    z-index: 9999;
+    display: flex; align-items: center; gap: 8px;
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.3s;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-color: rgba(76,175,130,0.3); }
+  .toast .toast-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
+
+  /* ─── SCROLLBAR ─── */
+  * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeIn 0.25s ease forwards; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .template-preview-panel { display: none; }
+  }
+  @media (max-width: 680px) {
+    .sidebar { width: 220px; min-width: 220px; }
+  }
+
+  /* ─── HELPER ─── */
+  .text-accent { color: var(--accent); }
+  .text-muted { color: var(--text-muted); }
+  .text-sm { font-size: 12px; }
+  .mt-4 { margin-top: 4px; }
+  .mt-8 { margin-top: 8px; }
+  .flex-row { display: flex; gap: 12px; }
+  .flex-row .form-group { flex: 1; }
+  select option { background: var(--bg-card); color: var(--text-primary); }
+
+  .field-type-select {
+    background: var(--bg-input);
+    border: none;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    outline: none;
+    cursor: pointer;
+    width: 70px;
+    appearance: none;
+  }
+
+  .hint { font-size: 11px; color: var(--text-muted); margin-top: 5px; line-height: 1.5; }
+  .hint code { font-family: 'DM Mono', monospace; background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 3px; font-size: 10px; color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- ─── SETUP OVERLAY ─── -->
+<div class="overlay" id="setupOverlay">
+  <div class="modal" id="setupModal">
+    <div class="setup-logo">
+      <span class="logo">Mission Email Hub<span>Correspondence Manager</span></span>
+      <p>Set up your mission information to get started. This is saved locally and can be changed at any time.</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mission Name</label>
+      <input class="form-input" id="setup-mission" placeholder="Mozambique Beira Mission" type="text">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Finance Secretary Name</label>
+      <input class="form-input" id="setup-secretary" placeholder="Elder / Sister Surname" type="text">
+    </div>
+    <div class="flex-row">
+      <div class="form-group">
+        <label class="form-label">Mission Office Phone</label>
+        <input class="form-input" id="setup-phone" placeholder="+258 XX XXX XXXX" type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Verification ID</label>
+        <input class="form-input" id="setup-verif" value="ANGEL" type="text">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Secretary Email</label>
+      <input class="form-input" id="setup-email" placeholder="XXXXXXXX-FIN@churchofjesuschrist.org" type="email">
+    </div>
+    <div class="modal-footer" style="margin-top:12px; padding-top:16px;">
+      <button class="btn btn-primary" onclick="saveSetup()">Save & Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SETTINGS MODAL ─── -->
+<div class="overlay" id="settingsOverlay">
+  <div class="modal modal-wide" style="position:relative;">
+    <button class="btn btn-ghost modal-close" onclick="closeModal('settingsOverlay')">✕</button>
+    <div class="modal-header">
+      <div class="modal-title">Settings</div>
+      <div class="modal-subtitle">Manage mission info, contacts, and templates</div>
+    </div>
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'tab-mission')">Mission Info</div>
+      <div class="tab" onclick="switchTab(this,'tab-contacts')">Contacts</div>
+      <div class="tab" onclick="switchTab(this,'tab-templates')">Templates</div>
+      <div class="tab" onclick="switchTab(this,'tab-import')">Import / Export</div>
+    </div>
+
+    <!-- Mission Info Tab -->
+    <div class="tab-panel active" id="tab-mission">
+      <div class="form-group">
+        <label class="form-label">Mission Name</label>
+        <input class="form-input" id="s-mission" type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Finance Secretary Name</label>
+        <input class="form-input" id="s-secretary" type="text">
+      </div>
+      <div class="flex-row">
+        <div class="form-group">
+          <label class="form-label">Office Phone</label>
+          <input class="form-input" id="s-phone" type="text">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Verification ID</label>
+          <input class="form-input" id="s-verif" type="text">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Secretary Email</label>
+        <input class="form-input" id="s-email" type="email">
+      </div>
+      <button class="btn btn-primary" onclick="saveSettingsMission()">Save Changes</button>
+    </div>
+
+    <!-- Contacts Tab -->
+    <div class="tab-panel" id="tab-contacts">
+      <p class="hint" style="margin-bottom:14px;">These contacts are available in all template "Send To" dropdowns.</p>
+      <div class="contacts-list" id="contactsList"></div>
+      <button class="btn btn-secondary" onclick="addContact()" style="font-size:12px;">+ Add Contact</button>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="saveContacts()">Save Contacts</button>
+      </div>
+    </div>
+
+    <!-- Templates Tab -->
+    <div class="tab-panel" id="tab-templates">
+      <p class="hint" style="margin-bottom:14px;">Add, edit, or remove email templates. Use <code>{{field_id}}</code> and system vars <code>{{SYS_MISSION}}</code> <code>{{SYS_SECRETARY}}</code> <code>{{SYS_PHONE}}</code> <code>{{SYS_EMAIL}}</code> <code>{{SYS_VERIF}}</code> in subject/body.</p>
+      <div id="templateList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
+      <button class="btn btn-secondary" onclick="openAddTemplate()" style="font-size:12px;">+ New Template</button>
+    </div>
+
+    <!-- Import/Export Tab -->
+    <div class="tab-panel" id="tab-import">
+      <div class="card" style="margin-bottom:16px;">
+        <div class="form-section-label">Export</div>
+        <p class="hint" style="margin-bottom:12px;">Download all contacts and templates as a <code>templates.json</code> file.</p>
+        <button class="btn btn-secondary" onclick="exportJSON()">↓ Download templates.json</button>
+      </div>
+      <div class="card">
+        <div class="form-section-label">Import</div>
+        <p class="hint" style="margin-bottom:12px;">Upload a <code>templates.json</code> file to replace your current contacts and templates. <strong style="color:var(--danger)">This will overwrite existing data.</strong></p>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(this)">
+        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">↑ Upload templates.json</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TEMPLATE EDITOR MODAL ─── -->
+<div class="overlay" id="templateEditorOverlay">
+  <div class="modal modal-wide" style="position:relative;">
+    <button class="btn btn-ghost modal-close" onclick="closeModal('templateEditorOverlay')">✕</button>
+    <div class="modal-header">
+      <div class="modal-title" id="editorTitle">New Template</div>
+    </div>
+    <input type="hidden" id="edit-id">
+    <div class="flex-row">
+      <div class="form-group">
+        <label class="form-label">Template Name</label>
+        <input class="form-input" id="edit-name" placeholder="e.g. Lost Card Report" type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <input class="form-input" id="edit-category" placeholder="e.g. HSBC Card Issues" type="text">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Default Contact</label>
+      <select class="contact-select" id="edit-contact"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Subject Line</label>
+      <input class="form-input" id="edit-subject" placeholder="Use {{field_id}} for field values" type="text">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email Body</label>
+      <textarea class="form-textarea" id="edit-body" style="min-height:180px;" placeholder="Write the email body. Use {{field_id}} and {{SYS_*}} placeholders."></textarea>
+    </div>
+    <div class="form-section-label" style="margin-top:4px;">Fields (user-fillable variables)</div>
+    <p class="hint" style="margin-bottom:10px;">Define the <code>{{field_id}}</code> variables. Each field creates an input in the form. Type: <code>text</code>, <code>textarea</code>, <code>email</code>, <code>date</code>.</p>
+    <div class="fields-list" id="fieldsList"></div>
+    <button class="btn btn-secondary" onclick="addField()" style="font-size:12px;">+ Add Field</button>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="deleteTemplateBtn" onclick="deleteCurrentTemplate()" style="display:none;">Delete Template</button>
+      <button class="btn btn-secondary" onclick="closeModal('templateEditorOverlay')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTemplate()">Save Template</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST ─── -->
+<div class="toast" id="toast"><span class="toast-dot"></span><span id="toastMsg"></span></div>
+
+<!-- ─── APP ─── -->
+<div class="app">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">Email Hub<span>Mission Correspondence</span></div>
+      <div class="mission-badge" id="missionBadge" onclick="openSettings('tab-mission')">—</div>
+    </div>
+    <div class="sidebar-search">
+      <input class="search-input" id="searchInput" placeholder="Search templates…" oninput="filterTemplates()">
+    </div>
+    <div class="sidebar-nav" id="sidebarNav"></div>
+    <div class="sidebar-footer">
+      <button class="btn-sidebar" onclick="openAddTemplate()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New
+      </button>
+      <button class="btn-sidebar" onclick="openSettings('tab-import')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
+        Import
+      </button>
+      <button class="btn-sidebar" onclick="openSettings()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+    <header class="main-header">
+      <div>
+        <div class="header-title" id="mainTitle">Select a Template</div>
+        <div class="header-subtitle" id="mainSubtitle">Choose from the sidebar to compose an email</div>
+      </div>
+      <div class="header-spacer"></div>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+        <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="btn-icon" onclick="openSettings()" title="Settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </header>
+    <div class="main-content" id="mainContent">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-state-icon">✉</div>
+        <h3>Ready to compose</h3>
+        <p>Select a template from the sidebar to fill out and send an email.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ─── DEFAULT DATA ───
+const DEFAULT_DATA = {
+  contacts: [
+    { id: "hsbc_support", name: "HSBC MSF Support", email: "HSBCcallcentersupport@globalpay.com" },
+    { id: "mission_cards", name: "Mission Cards (Church)", email: "MissionCards@churchofjesuschrist.org" },
+    { id: "msf_exception", name: "MSF Card Exception", email: "MSFCardException@churchofjesuschrist.org" },
+    { id: "gsd_mission", name: "GSD Mission Support", email: "GSDMissionSupport@churchofjesuschrist.org" },
+    { id: "mission_support", name: "Mission Support (Funding)", email: "GSD-MissionarySupport@ChurchofJesusChrist.org" }
+  ],
+  templates: [
+    {
+      id: "lost_stolen",
+      name: "Lost / Stolen Card",
+      category: "HSBC Card Issues",
+      defaultContact: "hsbc_support",
+      subject: "Lost/Stolen MSF Card – {{missionary_name}}",
+      fields: [
+        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
+        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
+        { id: "card_last4", label: "Last 4 Digits of Card", placeholder: "1234", type: "text" }
+      ],
+      body: `Dear HSBC Missionary Support Program Representative,
+
+Kindly close the following card that was lost/stolen and issue a new card.
+
+Cardholder full name: {{missionary_name}}
+Missionary's Email: {{missionary_email}}
+Last 4 digits of credit card number: {{card_last4}}
+The Mission Name: {{SYS_MISSION}}
+The Mission Finance Secretary's name: {{SYS_SECRETARY}}
+Phone: {{SYS_PHONE}}
+Secretary email with the correct domain: {{SYS_EMAIL}}
+Verification ID: {{SYS_VERIF}}`
+    },
+    {
+      id: "fraud_dispute",
+      name: "Fraud / Dispute",
+      category: "HSBC Card Issues",
+      defaultContact: "hsbc_support",
+      subject: "Fraudulent Transactions – {{missionary_name}}",
+      fields: [
+        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
+        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
+        { id: "card_last4", label: "Last 4 Digits of Card", placeholder: "1234", type: "text" },
+        { id: "fraudulent_transactions", label: "Fraudulent Transactions (list with merchant & amount)", placeholder: "1. Merchant Name – $XX.XX\n2. ...", type: "textarea" }
+      ],
+      body: `Dear HSBC Missionary Support Program Representative,
+
+The following transactions are fraudulent and were not made by the Missionary Cardholder. Kindly investigate and reverse the transactions listed below:
+
+{{fraudulent_transactions}}
+
+Cardholder full name: {{missionary_name}}
+Missionary's Email: {{missionary_email}}
+Last 4 digits of credit card number: {{card_last4}}
+The Mission Name: {{SYS_MISSION}}
+The Mission Finance Secretary's name: {{SYS_SECRETARY}}
+Phone: {{SYS_PHONE}}
+Secretary email with the correct domain: {{SYS_EMAIL}}
+Verification ID: {{SYS_VERIF}}`
+    },
+    {
+      id: "remove_pin_hold",
+      name: "Remove PIN Hold",
+      category: "HSBC Card Issues",
+      defaultContact: "hsbc_support",
+      subject: "PIN Hold Removal – {{missionary_name}}",
+      fields: [
+        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
+        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
+        { id: "card_last4", label: "Last 4 Digits of Card", placeholder: "1234", type: "text" }
+      ],
+      body: `Dear HSBC Missionary Support Program Representative,
+
+Kindly unblock this cardholder following too many PIN attempts. The cardholder will never need to re-set their PIN as it will always be the last 4 digits of their Missionary ID.
+
+Cardholder full name: {{missionary_name}}
+Missionary's Email: {{missionary_email}}
+Last 4 digits of credit card number: {{card_last4}}
+The Mission Name: {{SYS_MISSION}}
+The Mission Finance Secretary's name: {{SYS_SECRETARY}}
+Phone: {{SYS_PHONE}}
+Secretary email with the correct domain: {{SYS_EMAIL}}
+Verification ID: {{SYS_VERIF}}`
+    },
+    {
+      id: "card_decline",
+      name: "Card Decline Investigation",
+      category: "HSBC Card Issues",
+      defaultContact: "hsbc_support",
+      subject: "Card Decline – {{missionary_name}}",
+      fields: [
+        { id: "merchant_name", label: "Merchant Name", placeholder: "Where the card was declined", type: "text" },
+        { id: "date_declined", label: "Date of Decline", placeholder: "DD/MM/YYYY", type: "text" },
+        { id: "amount", label: "Attempted Amount", placeholder: "$XX.XX", type: "text" },
+        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
+        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
+        { id: "card_last4", label: "Last 4 Digits of Card", placeholder: "1234", type: "text" }
+      ],
+      body: `Dear HSBC Missionary Support Program Representative,
+
+Kindly investigate why the below card has been declined.
+
+Merchant name: {{merchant_name}}
+Date card declined: {{date_declined}}
+Dollar amount of attempted transaction: {{amount}}
+
+Cardholder full name: {{missionary_name}}
+Missionary's Email: {{missionary_email}}
+Last 4 digits of credit card number: {{card_last4}}
+The Mission Name: {{SYS_MISSION}}
+The Mission Finance Secretary's name: {{SYS_SECRETARY}}
+Phone: {{SYS_PHONE}}
+Secretary email with the correct domain: {{SYS_EMAIL}}
+Verification ID: {{SYS_VERIF}}`
+    },
+    {
+      id: "remove_suspend",
+      name: "Remove SUSPEND / Tiered Watch",
+      category: "HSBC Card Issues",
+      defaultContact: "hsbc_support",
+      subject: "Remove Suspend/Tiered Watch – {{missionary_name}}",
+      fields: [
+        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
+        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
+        { id: "card_last4", label: "Last 4 Digits of Card", placeholder: "1234", type: "text" }
+      ],
+      body: `Dear HSBC Missionary Support Program Representative,
+
+All transactions made on the account below have been approved. Kindly remove the hold (SUSPEND / Tiered Watch).
+
+Cardholder full name: {{missionary_name}}
+Missionary's Email: {{missionary_email}}
+Last 4 digits of credit card number: {{card_last4}}
+The Mission Name: {{SYS_MISSION}}
+The Mission Finance Secretary's name: {{SYS_SECRETARY}}
+Phone: {{SYS_PHONE}}
+Secretary email with the correct domain: {{SYS_EMAIL}}
+Verification ID: {{SYS_VERIF}}`
+    },
+    {
+      id: "unlock_app",
+      name: "HSBC App Unlock",
+      category: "HSBC Card Issues",
+      defaultContact: "hsbc_support",
+      subject: "HSBC App Unlock – {{missionary_name}}",
+      fields: [
+        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
+        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
+        { id: "card_last4", label: "Last 4 Digits of Card", placeholder: "1234", type: "text" }
+      ],
+      body: `Dear HSBC Missionary Support Program Representative,
+
+Kindly unlock the HSBC App for the following Missionary:
+
+Cardholder full name: {{missionary_name}}
+Missionary's Email: {{missionary_email}}
+Last 4 digits of credit card number: {{card_last4}}
+The Mission Name: {{SYS_MISSION}}
+The Mission Finance Secretary's name: {{SYS_SECRETARY}}
+Phone: {{SYS_PHONE}}
+Secretary email with the correct domain: {{SYS_EMAIL}}
+Verification ID: {{SYS_VERIF}}`
+    },
+    {
+      id: "visa_waiter_new_card",
+      name: "Visa Waiter – Request New Card",
+      category: "Visa Waiters",
+      defaultContact: "mission_cards",
+      subject: "New MSF Card Request – Visa Waiter – {{missionary_name}}",
+      fields: [
+        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
+        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
+        { id: "missionary_id", label: "Missionary ID #", placeholder: "000000", type: "text" }
+      ],
+      body: `Dear Mission Cards Team,
+
+We have received a visa waiting missionary in our mission who arrived without an MSF card. Kindly order a new card for the following missionary:
+
+Missionary full name: {{missionary_name}}
+Missionary's Email: {{missionary_email}}
+Missionary ID #: {{missionary_id}}
+The Mission Name: {{SYS_MISSION}}
+The Mission Finance Secretary's name: {{SYS_SECRETARY}}
+Phone: {{SYS_PHONE}}
+Secretary email with the correct domain: {{SYS_EMAIL}}
+
+Please advise on the expected delivery timeline. We will fund their companion's card in the meantime.`
+    },
+    {
+      id: "app_reg_hold",
+      name: "App Registration Hold",
+      category: "HSBC App",
+      defaultContact: "mission_cards",
+      subject: "HSBC App Registration Hold – {{missionary_name}}",
+      fields: [
+        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
+        { id: "missionary_id", label: "Missionary ID #", placeholder: "000000", type: "text" }
+      ],
+      body: `Dear Mission Cards Team,
+
+The following missionary has a hold on their HSBC CentreSuite app registration process. Kindly remove the hold.
+
+Missionary full name: {{missionary_name}}
+Missionary ID #: {{missionary_id}}
+The Mission Name: {{SYS_MISSION}}
+The Mission Finance Secretary's name: {{SYS_SECRETARY}}
+Phone: {{SYS_PHONE}}
+Secretary email with the correct domain: {{SYS_EMAIL}}`
+    },
+    {
+      id: "app_wrong_email",
+      name: "App Wrong Email Fix",
+      category: "HSBC App",
+      defaultContact: "mission_cards",
+      subject: "HSBC App Email Correction – {{missionary_name}}",
+      fields: [
+        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
+        { id: "username", label: "App Username", placeholder: "Username registered in the app", type: "text" },
+        { id: "correct_email", label: "Correct Missionary Email", placeholder: "correct@missionary.org", type: "email" }
+      ],
+      body: `Dear Mission Cards Team,
+
+The following missionary entered the wrong email address during HSBC CentreSuite app registration. Kindly update the email on file to the correct one.
+
+Missionary full name: {{missionary_name}}
+App Username: {{username}}
+Correct Email: {{correct_email}}
+The Mission Name: {{SYS_MISSION}}
+The Mission Finance Secretary's name: {{SYS_SECRETARY}}
+Phone: {{SYS_PHONE}}
+Secretary email with the correct domain: {{SYS_EMAIL}}`
+    },
+    {
+      id: "fund_companion",
+      name: "Fund via Companion's Card",
+      category: "Funding",
+      defaultContact: "msf_exception",
+      subject: "Companion Funding Limit – {{missionary_name}}",
+      fields: [
+        { id: "missionary_name", label: "Missionary Needing Funds", placeholder: "Elder / Sister Surname", type: "text" },
+        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
+        { id: "companion_name", label: "Companion's Full Name", placeholder: "Elder / Sister Surname", type: "text" },
+        { id: "reason", label: "Reason for Companion Funding", placeholder: "e.g. Card lost, awaiting replacement", type: "text" }
+      ],
+      body: `Dear MSF Card Exception Team,
+
+We need to fund a missionary via their companion's card for the reason stated below. Kindly raise the companion's funding limit accordingly and advise on the process.
+
+Missionary requiring funds: {{missionary_name}}
+Missionary's Email: {{missionary_email}}
+Companion's Name: {{companion_name}}
+Reason: {{reason}}
+The Mission Name: {{SYS_MISSION}}
+The Mission Finance Secretary's name: {{SYS_SECRETARY}}
+Phone: {{SYS_PHONE}}
+Secretary email with the correct domain: {{SYS_EMAIL}}`
+    },
+    {
+      id: "funding_issue",
+      name: "Funding Issue",
+      category: "Funding",
+      defaultContact: "gsd_mission",
+      subject: "MSF Funding Issue – {{SYS_MISSION}}",
+      fields: [
+        { id: "issue_description", label: "Describe the Funding Issue", placeholder: "Describe the issue in detail…", type: "textarea" },
+        { id: "missionary_name", label: "Missionary Affected (if applicable)", placeholder: "Elder / Sister Surname or 'All missionaries'", type: "text" }
+      ],
+      body: `Dear GSD Mission Support Team,
+
+We are experiencing a funding issue with the MSF cards in our mission. Details below:
+
+Issue: {{issue_description}}
+
+Missionary(ies) affected: {{missionary_name}}
+The Mission Name: {{SYS_MISSION}}
+The Mission Finance Secretary's name: {{SYS_SECRETARY}}
+Phone: {{SYS_PHONE}}
+Secretary email with the correct domain: {{SYS_EMAIL}}
+
+Please advise on how to resolve this issue.`
+    }
+  ]
+};
+
+// ─── STATE ───
+let setup = {};
+let contacts = [];
+let templates = [];
+let activeTemplateId = null;
+let fieldValues = {};
+
+// ─── INIT ───
+function init() {
+  const rawSetup = localStorage.getItem('missionSetup');
+  const rawData = localStorage.getItem('missionTemplateData');
+
+  if (rawData) {
+    const d = JSON.parse(rawData);
+    contacts = d.contacts || DEFAULT_DATA.contacts;
+    templates = d.templates || DEFAULT_DATA.templates;
+  } else {
+    contacts = JSON.parse(JSON.stringify(DEFAULT_DATA.contacts));
+    templates = JSON.parse(JSON.stringify(DEFAULT_DATA.templates));
+    saveData();
+  }
+
+  if (rawSetup) {
+    setup = JSON.parse(rawSetup);
+    updateMissionBadge();
+    renderSidebar();
+  } else {
+    document.getElementById('setupOverlay').classList.add('active');
+  }
+}
+
+function saveData() {
+  localStorage.setItem('missionTemplateData', JSON.stringify({ contacts, templates }));
+}
+
+function updateMissionBadge() {
+  document.getElementById('missionBadge').textContent = setup.mission_name || 'Mission';
+}
+
+// ─── SETUP ───
+function saveSetup() {
+  const mission = document.getElementById('setup-mission').value.trim();
+  const secretary = document.getElementById('setup-secretary').value.trim();
+  const phone = document.getElementById('setup-phone').value.trim();
+  const email = document.getElementById('setup-email').value.trim();
+  const verif = document.getElementById('setup-verif').value.trim();
+
+  if (!mission || !secretary || !email) {
+    showToast('Please fill in all required fields.');
+    return;
+  }
+
+  setup = { mission_name: mission, secretary_name: secretary, phone, email, verif };
+  localStorage.setItem('missionSetup', JSON.stringify(setup));
+  document.getElementById('setupOverlay').classList.remove('active');
+  updateMissionBadge();
+  renderSidebar();
+  showToast('Setup complete! Welcome to Mission Email Hub.');
+}
+
+// ─── SIDEBAR ───
+function renderSidebar(filter = '') {
+  const nav = document.getElementById('sidebarNav');
+  const lower = filter.toLowerCase();
+
+  const filtered = templates.filter(t =>
+    !filter || t.name.toLowerCase().includes(lower) || t.category.toLowerCase().includes(lower)
+  );
+
+  const categories = [...new Set(filtered.map(t => t.category))];
+
+  nav.innerHTML = categories.map(cat => {
+    const items = filtered.filter(t => t.category === cat);
+    return `<div class="nav-category">${cat}</div>` +
+      items.map(t => `
+        <div class="nav-item ${t.id === activeTemplateId ? 'active' : ''}" onclick="selectTemplate('${t.id}')">
+          <span class="nav-dot"></span>
+          ${t.name}
+        </div>
+      `).join('');
+  }).join('');
+}
+
+function filterTemplates() {
+  renderSidebar(document.getElementById('searchInput').value);
+}
+
+// ─── TEMPLATE SELECTION ───
+function selectTemplate(id) {
+  activeTemplateId = id;
+  fieldValues = {};
+  renderSidebar(document.getElementById('searchInput').value);
+
+  const t = templates.find(x => x.id === id);
+  if (!t) return;
+
+  document.getElementById('mainTitle').textContent = t.name;
+  document.getElementById('mainSubtitle').textContent = t.category;
+
+  const contact = contacts.find(c => c.id === t.defaultContact) || contacts[0];
+  const contactOpts = contacts.map(c => `<option value="${c.id}" ${c.id === t.defaultContact ? 'selected' : ''}>${c.name} &lt;${c.email}&gt;</option>`).join('');
+
+  const fieldsHtml = t.fields.map(f => {
+    if (f.type === 'textarea') {
+      return `<div class="form-group">
+        <label class="form-label">${f.label}</label>
+        <textarea class="form-textarea" id="field-${f.id}" placeholder="${f.placeholder || ''}" oninput="onFieldChange('${f.id}', this.value)">${fieldValues[f.id] || ''}</textarea>
+      </div>`;
+    }
+    return `<div class="form-group">
+      <label class="form-label">${f.label}</label>
+      <input class="form-input" id="field-${f.id}" type="${f.type || 'text'}" placeholder="${f.placeholder || ''}" value="${fieldValues[f.id] || ''}" oninput="onFieldChange('${f.id}', this.value)">
+    </div>`;
+  }).join('');
+
+  const content = document.getElementById('mainContent');
+  content.innerHTML = `
+    <div class="template-form fade-in">
+      <div class="card template-header" style="padding:20px 24px;">
+        <div class="template-name">${t.name}</div>
+        <div class="badge-row">
+          <span class="badge badge-category">${t.category}</span>
+          <span class="badge badge-contact" id="contactBadgeDisplay">${contact ? contact.name : ''}</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="form-section-label">Send To</div>
+        <div class="contact-row">
+          <select class="contact-select" id="contactSelector" onchange="updateContactBadge(this)">
+            ${contactOpts}
+          </select>
+        </div>
+
+        <div class="form-section-label">Template Fields</div>
+        ${fieldsHtml}
+
+        <div class="form-actions">
+          <a class="btn btn-primary" id="sendBtn" href="#" onclick="return openMailto()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Open in Mail
+          </a>
+          <button class="btn btn-secondary" onclick="openSettings('tab-templates')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit Template
+          </button>
+          <button class="btn btn-secondary" onclick="clearFields()">Clear Fields</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="template-preview-panel fade-in">
+      <div class="preview-sticky">
+        <div class="preview-label">Live Preview</div>
+        <div class="preview-card">
+          <div class="preview-email-bar">
+            <div class="preview-email-field"><strong>To:</strong><span id="prev-to">${contact ? contact.email : ''}</span></div>
+            <div class="preview-email-field"><strong>Sub:</strong><span id="prev-subject">${escapeHtml(t.subject)}</span></div>
+          </div>
+          <div class="preview-body" id="prev-body"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  updatePreview();
+}
+
+function onFieldChange(id, val) {
+  fieldValues[id] = val;
+  updatePreview();
+}
+
+function updateContactBadge(sel) {
+  const c = contacts.find(x => x.id === sel.value);
+  if (c) {
+    document.getElementById('contactBadgeDisplay').textContent = c.name;
+    document.getElementById('prev-to').textContent = c.email;
+  }
+}
+
+function clearFields() {
+  fieldValues = {};
+  selectTemplate(activeTemplateId);
+}
+
+function updatePreview() {
+  const t = templates.find(x => x.id === activeTemplateId);
+  if (!t) return;
+
+  const subj = document.getElementById('prev-subject');
+  const body = document.getElementById('prev-body');
+  if (!subj || !body) return;
+
+  const subs = substitute(t.subject, false);
+  const bodyHtml = substituteHtml(t.body);
+
+  subj.textContent = subs;
+  body.innerHTML = bodyHtml;
+}
+
+function substitute(text, forEmail = true) {
+  let out = text;
+  out = out.replace(/{{SYS_MISSION}}/g, setup.mission_name || '[Mission Name]');
+  out = out.replace(/{{SYS_SECRETARY}}/g, setup.secretary_name || '[Secretary Name]');
+  out = out.replace(/{{SYS_PHONE}}/g, setup.phone || '[Phone]');
+  out = out.replace(/{{SYS_EMAIL}}/g, setup.email || '[Secretary Email]');
+  out = out.replace(/{{SYS_VERIF}}/g, setup.verif || 'ANGEL');
+  const t = templates.find(x => x.id === activeTemplateId);
+  if (t) {
+    t.fields.forEach(f => {
+      const val = fieldValues[f.id] || (forEmail ? `[${f.label}]` : `[${f.label}]`);
+      out = out.replace(new RegExp(`{{${f.id}}}`, 'g'), val);
+    });
+  }
+  // remaining placeholders
+  out = out.replace(/{{[^}]+}}/g, '[…]');
+  return out;
+}
+
+function substituteHtml(text) {
+  let out = escapeHtml(text);
+  const sys = { SYS_MISSION: setup.mission_name, SYS_SECRETARY: setup.secretary_name, SYS_PHONE: setup.phone, SYS_EMAIL: setup.email, SYS_VERIF: setup.verif || 'ANGEL' };
+  for (const [k, v] of Object.entries(sys)) {
+    out = out.replace(new RegExp(`{{${k}}}`, 'g'), v ? escapeHtml(v) : `<span class="preview-placeholder">[${k}]</span>`);
+  }
+  const t = templates.find(x => x.id === activeTemplateId);
+  if (t) {
+    t.fields.forEach(f => {
+      const val = fieldValues[f.id];
+      const repl = val ? escapeHtml(val) : `<span class="preview-placeholder">[${f.label}]</span>`;
+      out = out.replace(new RegExp(`{{${f.id}}}`, 'g'), repl);
+    });
+  }
+  out = out.replace(/{{[^}]+}}/g, '<span class="preview-placeholder">[…]</span>');
+  return out;
+}
+
+function escapeHtml(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function openMailto() {
+  const t = templates.find(x => x.id === activeTemplateId);
+  if (!t) return false;
+
+  const sel = document.getElementById('contactSelector');
+  const contactId = sel ? sel.value : t.defaultContact;
+  const contact = contacts.find(c => c.id === contactId);
+  if (!contact) { showToast('No contact selected.'); return false; }
+
+  const subject = substitute(t.subject, true);
+  const body = substitute(t.body, true);
+
+  const mailto = `mailto:${encodeURIComponent(contact.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailto;
+  return false;
+}
+
+// ─── SETTINGS ───
+function openSettings(tab = 'tab-mission') {
+  // Fill mission fields
+  document.getElementById('s-mission').value = setup.mission_name || '';
+  document.getElementById('s-secretary').value = setup.secretary_name || '';
+  document.getElementById('s-phone').value = setup.phone || '';
+  document.getElementById('s-email').value = setup.email || '';
+  document.getElementById('s-verif').value = setup.verif || 'ANGEL';
+
+  renderContactsList();
+  renderTemplateList();
+
+  // Switch to tab
+  document.querySelectorAll('.tabs .tab').forEach(t => {
+    const target = t.getAttribute('onclick').match(/'([^']+)'/)?.[1];
+    t.classList.toggle('active', target === tab);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => {
+    p.classList.toggle('active', p.id === tab);
+  });
+
+  document.getElementById('settingsOverlay').classList.add('active');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+function switchTab(el, tabId) {
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  el.closest('.modal').querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+}
+
+function saveSettingsMission() {
+  setup.mission_name = document.getElementById('s-mission').value.trim();
+  setup.secretary_name = document.getElementById('s-secretary').value.trim();
+  setup.phone = document.getElementById('s-phone').value.trim();
+  setup.email = document.getElementById('s-email').value.trim();
+  setup.verif = document.getElementById('s-verif').value.trim();
+  localStorage.setItem('missionSetup', JSON.stringify(setup));
+  updateMissionBadge();
+  showToast('Mission info saved.');
+  if (activeTemplateId) updatePreview();
+}
+
+// ─── CONTACTS ───
+function renderContactsList() {
+  const list = document.getElementById('contactsList');
+  list.innerHTML = contacts.map((c, i) => `
+    <div class="contact-item" id="contact-item-${i}">
+      <input type="text" value="${c.name}" placeholder="Name" oninput="contacts[${i}].name=this.value">
+      <span class="contact-sep">|</span>
+      <input type="email" value="${c.email}" placeholder="email@example.com" style="flex:1" oninput="contacts[${i}].email=this.value">
+      <button class="btn btn-ghost" style="padding:4px 8px;font-size:11px;" onclick="removeContact(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function addContact() {
+  contacts.push({ id: 'contact_' + Date.now(), name: '', email: '' });
+  renderContactsList();
+}
+
+function removeContact(i) {
+  contacts.splice(i, 1);
+  renderContactsList();
+}
+
+function saveContacts() {
+  saveData();
+  showToast('Contacts saved.');
+  if (activeTemplateId) selectTemplate(activeTemplateId);
+}
+
+// ─── TEMPLATE LIST IN SETTINGS ───
+function renderTemplateList() {
+  const list = document.getElementById('templateList');
+  list.innerHTML = templates.map(t => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);">
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:500;color:var(--text-primary);">${t.name}</div>
+        <div style="font-size:11px;color:var(--text-muted);">${t.category}</div>
+      </div>
+      <button class="btn btn-ghost" style="font-size:12px;" onclick="openEditTemplate('${t.id}')">Edit</button>
+    </div>
+  `).join('');
+}
+
+// ─── TEMPLATE EDITOR ───
+let editingFields = [];
+
+function openAddTemplate() {
+  editingFields = [];
+  document.getElementById('edit-id').value = '';
+  document.getElementById('editorTitle').textContent = 'New Template';
+  document.getElementById('edit-name').value = '';
+  document.getElementById('edit-category').value = '';
+  document.getElementById('edit-subject').value = '';
+  document.getElementById('edit-body').value = '';
+  document.getElementById('deleteTemplateBtn').style.display = 'none';
+
+  const sel = document.getElementById('edit-contact');
+  sel.innerHTML = contacts.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+
+  renderFieldsList();
+  closeModal('settingsOverlay');
+  document.getElementById('templateEditorOverlay').classList.add('active');
+}
+
+function openEditTemplate(id) {
+  const t = templates.find(x => x.id === id);
+  if (!t) return;
+
+  editingFields = JSON.parse(JSON.stringify(t.fields || []));
+  document.getElementById('edit-id').value = t.id;
+  document.getElementById('editorTitle').textContent = 'Edit Template';
+  document.getElementById('edit-name').value = t.name;
+  document.getElementById('edit-category').value = t.category;
+  document.getElementById('edit-subject').value = t.subject;
+  document.getElementById('edit-body').value = t.body;
+  document.getElementById('deleteTemplateBtn').style.display = 'inline-flex';
+
+  const sel = document.getElementById('edit-contact');
+  sel.innerHTML = contacts.map(c => `<option value="${c.id}" ${c.id === t.defaultContact ? 'selected' : ''}>${c.name}</option>`).join('');
+
+  renderFieldsList();
+  closeModal('settingsOverlay');
+  document.getElementById('templateEditorOverlay').classList.add('active');
+}
+
+function renderFieldsList() {
+  const list = document.getElementById('fieldsList');
+  list.innerHTML = editingFields.map((f, i) => `
+    <div class="field-item">
+      <input type="text" value="${f.id}" placeholder="field_id" oninput="editingFields[${i}].id=this.value" title="Field ID (used in body as {{this_id}})">
+      <input type="text" value="${f.label}" placeholder="Label" oninput="editingFields[${i}].label=this.value">
+      <input type="text" value="${f.placeholder || ''}" placeholder="Placeholder" oninput="editingFields[${i}].placeholder=this.value">
+      <select class="field-type-select" onchange="editingFields[${i}].type=this.value">
+        <option value="text" ${f.type==='text'?'selected':''}>text</option>
+        <option value="textarea" ${f.type==='textarea'?'selected':''}>textarea</option>
+        <option value="email" ${f.type==='email'?'selected':''}>email</option>
+        <option value="date" ${f.type==='date'?'selected':''}>date</option>
+      </select>
+      <button class="btn btn-ghost" style="padding:3px 8px;" onclick="editingFields.splice(${i},1);renderFieldsList()">✕</button>
+    </div>
+  `).join('');
+}
+
+function addField() {
+  editingFields.push({ id: 'field_' + (editingFields.length + 1), label: '', placeholder: '', type: 'text' });
+  renderFieldsList();
+}
+
+function saveTemplate() {
+  const id = document.getElementById('edit-id').value || 'tpl_' + Date.now();
+  const name = document.getElementById('edit-name').value.trim();
+  const category = document.getElementById('edit-category').value.trim();
+  const subject = document.getElementById('edit-subject').value.trim();
+  const body = document.getElementById('edit-body').value;
+  const defaultContact = document.getElementById('edit-contact').value;
+
+  if (!name || !subject) { showToast('Name and subject are required.'); return; }
+
+  const existing = templates.findIndex(t => t.id === id);
+  const tpl = { id, name, category, defaultContact, subject, fields: editingFields, body };
+
+  if (existing >= 0) templates[existing] = tpl;
+  else templates.push(tpl);
+
+  saveData();
+  renderSidebar(document.getElementById('searchInput').value);
+  closeModal('templateEditorOverlay');
+  showToast(`Template "${name}" saved.`);
+  if (activeTemplateId === id) selectTemplate(id);
+}
+
+function deleteCurrentTemplate() {
+  const id = document.getElementById('edit-id').value;
+  if (!id) return;
+  if (!confirm('Delete this template?')) return;
+  const i = templates.findIndex(t => t.id === id);
+  if (i >= 0) templates.splice(i, 1);
+  saveData();
+  renderSidebar(document.getElementById('searchInput').value);
+  closeModal('templateEditorOverlay');
+  if (activeTemplateId === id) {
+    activeTemplateId = null;
+    document.getElementById('mainContent').innerHTML = `<div class="empty-state"><div class="empty-state-icon">✉</div><h3>Select a template</h3><p>Choose from the sidebar to compose an email.</p></div>`;
+  }
+  showToast('Template deleted.');
+}
+
+// ─── IMPORT / EXPORT ───
+function exportJSON() {
+  const data = JSON.stringify({ contacts, templates }, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'templates.json';
+  a.click();
+  showToast('templates.json downloaded.');
+}
+
+function importJSON(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.contacts) contacts = data.contacts;
+      if (data.templates) templates = data.templates;
+      saveData();
+      renderSidebar(document.getElementById('searchInput').value);
+      showToast('Templates imported successfully.');
+      input.value = '';
+    } catch {
+      showToast('Invalid JSON file.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ─── TOAST ───
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── CLOSE OVERLAYS ON BACKDROP ───
+document.querySelectorAll('.overlay').forEach(o => {
+  o.addEventListener('click', e => {
+    if (e.target === o && o.id !== 'setupOverlay') closeModal(o.id);
+  });
+});
+
+// ─── THEME ───
+function toggleTheme() {
+  const isLight = document.documentElement.classList.toggle('light');
+  localStorage.setItem('missionTheme', isLight ? 'light' : 'dark');
+}
+
+function applyTheme() {
+  const saved = localStorage.getItem('missionTheme');
+  if (saved !== 'dark') {
+    document.documentElement.classList.add('light');
+  }
+}
+
+// ─── START ───
+applyTheme();
+init();
+</script>
+</body>
+</html>
