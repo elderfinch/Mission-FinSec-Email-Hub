@@ -746,289 +746,375 @@
 <script>
 // ─── DEFAULT DATA ───
 const DEFAULT_DATA = {
-  contacts: [
-    { id: "hsbc_support", name: "HSBC MSF Support", email: "HSBCcallcentersupport@globalpay.com" },
-    { id: "mission_cards", name: "Mission Cards (Church)", email: "MissionCards@churchofjesuschrist.org" },
-    { id: "msf_exception", name: "MSF Card Exception", email: "MSFCardException@churchofjesuschrist.org" },
-    { id: "gsd_mission", name: "GSD Mission Support", email: "GSDMissionSupport@churchofjesuschrist.org" },
-    { id: "mission_support", name: "Mission Support (Funding)", email: "GSD-MissionarySupport@ChurchofJesusChrist.org" }
+  "contacts": [
+    {
+      "id": "hsbc_support",
+      "name": "HSBC MSF Support",
+      "email": "HSBCcallcentersupport@globalpay.com"
+    },
+    {
+      "id": "mission_cards",
+      "name": "Mission Cards (Church)",
+      "email": "MissionCards@churchofjesuschrist.org"
+    },
+    {
+      "id": "msf_exception",
+      "name": "MSF Card Exception",
+      "email": "MSFCardException@churchofjesuschrist.org"
+    },
+    {
+      "id": "gsd_mission",
+      "name": "GSD Mission Support",
+      "email": "GSDMissionSupport@churchofjesuschrist.org"
+    },
+    {
+      "id": "mission_support",
+      "name": "Mission Support (Funding)",
+      "email": "GSD-MissionarySupport@ChurchofJesusChrist.org"
+    },
+    {
+      "id": "contact_1775462040927",
+      "name": "Lucas Mataveis",
+      "email": "MataveisLM@churchofjesuschrist.org"
+    },
+    {
+      "id": "contact_1775462286281",
+      "name": "Aetna Claims",
+      "email": "aiservice@aetna.com"
+    }
   ],
-  templates: [
+  "templates": [
     {
-      id: "lost_stolen",
-      name: "Lost / Stolen Card",
-      category: "HSBC Card Issues",
-      defaultContact: "hsbc_support",
-      subject: "Lost/Stolen MSF Card – {{missionary_name}}",
-      fields: [
-        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
-        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
-        { id: "card_last4", label: "Last 4 Digits of Card", placeholder: "1234", type: "text" }
+      "id": "lost_stolen",
+      "name": "Lost / Stolen Card",
+      "category": "HSBC Card Issues",
+      "defaultContact": "hsbc_support",
+      "subject": "Lost/Stolen MSF Card – {{missionary_name}}",
+      "fields": [
+        {
+          "id": "missionary_name",
+          "label": "Missionary Full Name",
+          "placeholder": "Elder / Sister Surname",
+          "type": "text"
+        },
+        {
+          "id": "missionary_email",
+          "label": "Missionary Email",
+          "placeholder": "name@missionary.org",
+          "type": "email"
+        },
+        {
+          "id": "card_last4",
+          "label": "Last 4 Digits of Card",
+          "placeholder": "1234",
+          "type": "text"
+        }
       ],
-      body: `Dear HSBC Missionary Support Program Representative,
-
-Kindly close the following card that was lost/stolen and issue a new card.
-
-Cardholder full name: {{missionary_name}}
-Missionary's Email: {{missionary_email}}
-Last 4 digits of credit card number: {{card_last4}}
-The Mission Name: {{SYS_MISSION}}
-The Mission Finance Secretary's name: {{SYS_SECRETARY}}
-Phone: {{SYS_PHONE}}
-Secretary email with the correct domain: {{SYS_EMAIL}}
-Verification ID: {{SYS_VERIF}}`
+      "body": "Dear HSBC Missionary Support Program Representative,\n\nKindly close the following card that was lost/stolen and issue a new card.\n\nCardholder full name: {{missionary_name}}\nMissionary's Email: {{missionary_email}}\nLast 4 digits of credit card number: {{card_last4}}\nThe Mission Name: {{SYS_MISSION}}\nThe Mission Finance Secretary's name: {{SYS_SECRETARY}}\nPhone: {{SYS_PHONE}}\nSecretary email with the correct domain: {{SYS_EMAIL}}\nVerification ID: {{SYS_VERIF}}"
     },
     {
-      id: "fraud_dispute",
-      name: "Fraud / Dispute",
-      category: "HSBC Card Issues",
-      defaultContact: "hsbc_support",
-      subject: "Fraudulent Transactions – {{missionary_name}}",
-      fields: [
-        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
-        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
-        { id: "card_last4", label: "Last 4 Digits of Card", placeholder: "1234", type: "text" },
-        { id: "fraudulent_transactions", label: "Fraudulent Transactions (list with merchant & amount)", placeholder: "1. Merchant Name – $XX.XX\n2. ...", type: "textarea" }
+      "id": "fraud_dispute",
+      "name": "Fraud / Dispute",
+      "category": "HSBC Card Issues",
+      "defaultContact": "hsbc_support",
+      "subject": "Fraudulent Transactions – {{missionary_name}}",
+      "fields": [
+        {
+          "id": "missionary_name",
+          "label": "Missionary Full Name",
+          "placeholder": "Elder / Sister Surname",
+          "type": "text"
+        },
+        {
+          "id": "missionary_email",
+          "label": "Missionary Email",
+          "placeholder": "name@missionary.org",
+          "type": "email"
+        },
+        {
+          "id": "card_last4",
+          "label": "Last 4 Digits of Card",
+          "placeholder": "1234",
+          "type": "text"
+        },
+        {
+          "id": "fraudulent_transactions",
+          "label": "Fraudulent Transactions (list with merchant & amount)",
+          "placeholder": "1. Merchant Name – $XX.XX\n2. ...",
+          "type": "textarea"
+        }
       ],
-      body: `Dear HSBC Missionary Support Program Representative,
-
-The following transactions are fraudulent and were not made by the Missionary Cardholder. Kindly investigate and reverse the transactions listed below:
-
-{{fraudulent_transactions}}
-
-Cardholder full name: {{missionary_name}}
-Missionary's Email: {{missionary_email}}
-Last 4 digits of credit card number: {{card_last4}}
-The Mission Name: {{SYS_MISSION}}
-The Mission Finance Secretary's name: {{SYS_SECRETARY}}
-Phone: {{SYS_PHONE}}
-Secretary email with the correct domain: {{SYS_EMAIL}}
-Verification ID: {{SYS_VERIF}}`
+      "body": "Dear HSBC Missionary Support Program Representative,\n\nThe following transactions are fraudulent and were not made by the Missionary Cardholder. Kindly investigate and reverse the transactions listed below:\n\n{{fraudulent_transactions}}\n\nCardholder full name: {{missionary_name}}\nMissionary's Email: {{missionary_email}}\nLast 4 digits of credit card number: {{card_last4}}\nThe Mission Name: {{SYS_MISSION}}\nThe Mission Finance Secretary's name: {{SYS_SECRETARY}}\nPhone: {{SYS_PHONE}}\nSecretary email with the correct domain: {{SYS_EMAIL}}\nVerification ID: {{SYS_VERIF}}"
     },
     {
-      id: "remove_pin_hold",
-      name: "Remove PIN Hold",
-      category: "HSBC Card Issues",
-      defaultContact: "hsbc_support",
-      subject: "PIN Hold Removal – {{missionary_name}}",
-      fields: [
-        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
-        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
-        { id: "card_last4", label: "Last 4 Digits of Card", placeholder: "1234", type: "text" }
+      "id": "remove_pin_hold",
+      "name": "Remove PIN Hold",
+      "category": "HSBC Card Issues",
+      "defaultContact": "hsbc_support",
+      "subject": "PIN Hold Removal – {{missionary_name}}",
+      "fields": [
+        {
+          "id": "missionary_name",
+          "label": "Missionary Full Name",
+          "placeholder": "Elder / Sister Surname",
+          "type": "text"
+        },
+        {
+          "id": "missionary_email",
+          "label": "Missionary Email",
+          "placeholder": "name@missionary.org",
+          "type": "email"
+        },
+        {
+          "id": "card_last4",
+          "label": "Last 4 Digits of Card",
+          "placeholder": "1234",
+          "type": "text"
+        }
       ],
-      body: `Dear HSBC Missionary Support Program Representative,
-
-Kindly unblock this cardholder following too many PIN attempts. The cardholder will never need to re-set their PIN as it will always be the last 4 digits of their Missionary ID.
-
-Cardholder full name: {{missionary_name}}
-Missionary's Email: {{missionary_email}}
-Last 4 digits of credit card number: {{card_last4}}
-The Mission Name: {{SYS_MISSION}}
-The Mission Finance Secretary's name: {{SYS_SECRETARY}}
-Phone: {{SYS_PHONE}}
-Secretary email with the correct domain: {{SYS_EMAIL}}
-Verification ID: {{SYS_VERIF}}`
+      "body": "Dear HSBC Missionary Support Program Representative,\n\nKindly unblock this cardholder following too many PIN attempts. The cardholder will never need to re-set their PIN as it will always be the last 4 digits of their Missionary ID.\n\nCardholder full name: {{missionary_name}}\nMissionary's Email: {{missionary_email}}\nLast 4 digits of credit card number: {{card_last4}}\nThe Mission Name: {{SYS_MISSION}}\nThe Mission Finance Secretary's name: {{SYS_SECRETARY}}\nPhone: {{SYS_PHONE}}\nSecretary email with the correct domain: {{SYS_EMAIL}}\nVerification ID: {{SYS_VERIF}}"
     },
     {
-      id: "card_decline",
-      name: "Card Decline Investigation",
-      category: "HSBC Card Issues",
-      defaultContact: "hsbc_support",
-      subject: "Card Decline – {{missionary_name}}",
-      fields: [
-        { id: "merchant_name", label: "Merchant Name", placeholder: "Where the card was declined", type: "text" },
-        { id: "date_declined", label: "Date of Decline", placeholder: "DD/MM/YYYY", type: "text" },
-        { id: "amount", label: "Attempted Amount", placeholder: "$XX.XX", type: "text" },
-        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
-        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
-        { id: "card_last4", label: "Last 4 Digits of Card", placeholder: "1234", type: "text" }
+      "id": "card_decline",
+      "name": "Card Decline Investigation",
+      "category": "HSBC Card Issues",
+      "defaultContact": "hsbc_support",
+      "subject": "Card Decline – {{missionary_name}}",
+      "fields": [
+        {
+          "id": "merchant_name",
+          "label": "Merchant Name",
+          "placeholder": "Where the card was declined",
+          "type": "text"
+        },
+        {
+          "id": "date_declined",
+          "label": "Date of Decline",
+          "placeholder": "DD/MM/YYYY",
+          "type": "text"
+        },
+        {
+          "id": "amount",
+          "label": "Attempted Amount",
+          "placeholder": "$XX.XX",
+          "type": "text"
+        },
+        {
+          "id": "missionary_name",
+          "label": "Missionary Full Name",
+          "placeholder": "Elder / Sister Surname",
+          "type": "text"
+        },
+        {
+          "id": "missionary_email",
+          "label": "Missionary Email",
+          "placeholder": "name@missionary.org",
+          "type": "email"
+        },
+        {
+          "id": "card_last4",
+          "label": "Last 4 Digits of Card",
+          "placeholder": "1234",
+          "type": "text"
+        }
       ],
-      body: `Dear HSBC Missionary Support Program Representative,
-
-Kindly investigate why the below card has been declined.
-
-Merchant name: {{merchant_name}}
-Date card declined: {{date_declined}}
-Dollar amount of attempted transaction: {{amount}}
-
-Cardholder full name: {{missionary_name}}
-Missionary's Email: {{missionary_email}}
-Last 4 digits of credit card number: {{card_last4}}
-The Mission Name: {{SYS_MISSION}}
-The Mission Finance Secretary's name: {{SYS_SECRETARY}}
-Phone: {{SYS_PHONE}}
-Secretary email with the correct domain: {{SYS_EMAIL}}
-Verification ID: {{SYS_VERIF}}`
+      "body": "Dear HSBC Missionary Support Program Representative,\n\nKindly investigate why the below card has been declined.\n\nMerchant name: {{merchant_name}}\nDate card declined: {{date_declined}}\nDollar amount of attempted transaction: {{amount}}\n\nCardholder full name: {{missionary_name}}\nMissionary's Email: {{missionary_email}}\nLast 4 digits of credit card number: {{card_last4}}\nThe Mission Name: {{SYS_MISSION}}\nThe Mission Finance Secretary's name: {{SYS_SECRETARY}}\nPhone: {{SYS_PHONE}}\nSecretary email with the correct domain: {{SYS_EMAIL}}\nVerification ID: {{SYS_VERIF}}"
     },
     {
-      id: "remove_suspend",
-      name: "Remove SUSPEND / Tiered Watch",
-      category: "HSBC Card Issues",
-      defaultContact: "hsbc_support",
-      subject: "Remove Suspend/Tiered Watch – {{missionary_name}}",
-      fields: [
-        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
-        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
-        { id: "card_last4", label: "Last 4 Digits of Card", placeholder: "1234", type: "text" }
+      "id": "remove_suspend",
+      "name": "Remove SUSPEND / Tiered Watch",
+      "category": "HSBC Card Issues",
+      "defaultContact": "hsbc_support",
+      "subject": "Remove Suspend/Tiered Watch – {{missionary_name}}",
+      "fields": [
+        {
+          "id": "missionary_name",
+          "label": "Missionary Full Name",
+          "placeholder": "Elder / Sister Surname",
+          "type": "text"
+        },
+        {
+          "id": "missionary_email",
+          "label": "Missionary Email",
+          "placeholder": "name@missionary.org",
+          "type": "email"
+        },
+        {
+          "id": "card_last4",
+          "label": "Last 4 Digits of Card",
+          "placeholder": "1234",
+          "type": "text"
+        }
       ],
-      body: `Dear HSBC Missionary Support Program Representative,
-
-All transactions made on the account below have been approved. Kindly remove the hold (SUSPEND / Tiered Watch).
-
-Cardholder full name: {{missionary_name}}
-Missionary's Email: {{missionary_email}}
-Last 4 digits of credit card number: {{card_last4}}
-The Mission Name: {{SYS_MISSION}}
-The Mission Finance Secretary's name: {{SYS_SECRETARY}}
-Phone: {{SYS_PHONE}}
-Secretary email with the correct domain: {{SYS_EMAIL}}
-Verification ID: {{SYS_VERIF}}`
+      "body": "Dear HSBC Missionary Support Program Representative,\n\nAll transactions made on the account below have been approved. Kindly remove the hold (SUSPEND / Tiered Watch).\n\nCardholder full name: {{missionary_name}}\nMissionary's Email: {{missionary_email}}\nLast 4 digits of credit card number: {{card_last4}}\nThe Mission Name: {{SYS_MISSION}}\nThe Mission Finance Secretary's name: {{SYS_SECRETARY}}\nPhone: {{SYS_PHONE}}\nSecretary email with the correct domain: {{SYS_EMAIL}}\nVerification ID: {{SYS_VERIF}}"
     },
     {
-      id: "unlock_app",
-      name: "HSBC App Unlock",
-      category: "HSBC Card Issues",
-      defaultContact: "hsbc_support",
-      subject: "HSBC App Unlock – {{missionary_name}}",
-      fields: [
-        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
-        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
-        { id: "card_last4", label: "Last 4 Digits of Card", placeholder: "1234", type: "text" }
+      "id": "unlock_app",
+      "name": "HSBC App Unlock",
+      "category": "HSBC Card Issues",
+      "defaultContact": "hsbc_support",
+      "subject": "HSBC App Unlock – {{missionary_name}}",
+      "fields": [
+        {
+          "id": "missionary_name",
+          "label": "Missionary Full Name",
+          "placeholder": "Elder / Sister Surname",
+          "type": "text"
+        },
+        {
+          "id": "missionary_email",
+          "label": "Missionary Email",
+          "placeholder": "name@missionary.org",
+          "type": "email"
+        },
+        {
+          "id": "card_last4",
+          "label": "Last 4 Digits of Card",
+          "placeholder": "1234",
+          "type": "text"
+        }
       ],
-      body: `Dear HSBC Missionary Support Program Representative,
-
-Kindly unlock the HSBC App for the following Missionary:
-
-Cardholder full name: {{missionary_name}}
-Missionary's Email: {{missionary_email}}
-Last 4 digits of credit card number: {{card_last4}}
-The Mission Name: {{SYS_MISSION}}
-The Mission Finance Secretary's name: {{SYS_SECRETARY}}
-Phone: {{SYS_PHONE}}
-Secretary email with the correct domain: {{SYS_EMAIL}}
-Verification ID: {{SYS_VERIF}}`
+      "body": "Dear HSBC Missionary Support Program Representative,\n\nKindly unlock the HSBC App for the following Missionary:\n\nCardholder full name: {{missionary_name}}\nMissionary's Email: {{missionary_email}}\nLast 4 digits of credit card number: {{card_last4}}\nThe Mission Name: {{SYS_MISSION}}\nThe Mission Finance Secretary's name: {{SYS_SECRETARY}}\nPhone: {{SYS_PHONE}}\nSecretary email with the correct domain: {{SYS_EMAIL}}\nVerification ID: {{SYS_VERIF}}"
     },
     {
-      id: "visa_waiter_new_card",
-      name: "Visa Waiter – Request New Card",
-      category: "Visa Waiters",
-      defaultContact: "mission_cards",
-      subject: "New MSF Card Request – Visa Waiter – {{missionary_name}}",
-      fields: [
-        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
-        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
-        { id: "missionary_id", label: "Missionary ID #", placeholder: "000000", type: "text" }
+      "id": "visa_waiter_new_card",
+      "name": "Visa Waiter – Request New Card",
+      "category": "Visa Waiters",
+      "defaultContact": "mission_cards",
+      "subject": "New MSF Card Request – Visa Waiter – {{missionary_name}}",
+      "fields": [
+        {
+          "id": "missionary_name",
+          "label": "Missionary Full Name",
+          "placeholder": "Elder / Sister Surname",
+          "type": "text"
+        },
+        {
+          "id": "missionary_email",
+          "label": "Missionary Email",
+          "placeholder": "name@missionary.org",
+          "type": "email"
+        },
+        {
+          "id": "missionary_id",
+          "label": "Missionary ID #",
+          "placeholder": "000000",
+          "type": "text"
+        }
       ],
-      body: `Dear Mission Cards Team,
-
-We have received a visa waiting missionary in our mission who arrived without an MSF card. Kindly order a new card for the following missionary:
-
-Missionary full name: {{missionary_name}}
-Missionary's Email: {{missionary_email}}
-Missionary ID #: {{missionary_id}}
-The Mission Name: {{SYS_MISSION}}
-The Mission Finance Secretary's name: {{SYS_SECRETARY}}
-Phone: {{SYS_PHONE}}
-Secretary email with the correct domain: {{SYS_EMAIL}}
-
-Please advise on the expected delivery timeline. We will fund their companion's card in the meantime.`
+      "body": "Dear Mission Cards Team,\n\nWe have received a visa waiting missionary in our mission who arrived without an MSF card. Kindly order a new card for the following missionary:\n\nMissionary full name: {{missionary_name}}\nMissionary's Email: {{missionary_email}}\nMissionary ID #: {{missionary_id}}\nThe Mission Name: {{SYS_MISSION}}\nThe Mission Finance Secretary's name: {{SYS_SECRETARY}}\nPhone: {{SYS_PHONE}}\nSecretary email with the correct domain: {{SYS_EMAIL}}\n\nPlease advise on the expected delivery timeline. We will fund their companion's card in the meantime."
     },
     {
-      id: "app_reg_hold",
-      name: "App Registration Hold",
-      category: "HSBC App",
-      defaultContact: "mission_cards",
-      subject: "HSBC App Registration Hold – {{missionary_name}}",
-      fields: [
-        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
-        { id: "missionary_id", label: "Missionary ID #", placeholder: "000000", type: "text" }
+      "id": "app_reg_hold",
+      "name": "App Registration Hold",
+      "category": "HSBC App",
+      "defaultContact": "mission_cards",
+      "subject": "HSBC App Registration Hold – {{missionary_name}}",
+      "fields": [
+        {
+          "id": "missionary_name",
+          "label": "Missionary Full Name",
+          "placeholder": "Elder / Sister Surname",
+          "type": "text"
+        },
+        {
+          "id": "missionary_id",
+          "label": "Missionary ID #",
+          "placeholder": "000000",
+          "type": "text"
+        }
       ],
-      body: `Dear Mission Cards Team,
-
-The following missionary has a hold on their HSBC CentreSuite app registration process. Kindly remove the hold.
-
-Missionary full name: {{missionary_name}}
-Missionary ID #: {{missionary_id}}
-The Mission Name: {{SYS_MISSION}}
-The Mission Finance Secretary's name: {{SYS_SECRETARY}}
-Phone: {{SYS_PHONE}}
-Secretary email with the correct domain: {{SYS_EMAIL}}`
+      "body": "Dear Mission Cards Team,\n\nThe following missionary has a hold on their HSBC CentreSuite app registration process. Kindly remove the hold.\n\nMissionary full name: {{missionary_name}}\nMissionary ID #: {{missionary_id}}\nThe Mission Name: {{SYS_MISSION}}\nThe Mission Finance Secretary's name: {{SYS_SECRETARY}}\nPhone: {{SYS_PHONE}}\nSecretary email with the correct domain: {{SYS_EMAIL}}"
     },
     {
-      id: "app_wrong_email",
-      name: "App Wrong Email Fix",
-      category: "HSBC App",
-      defaultContact: "mission_cards",
-      subject: "HSBC App Email Correction – {{missionary_name}}",
-      fields: [
-        { id: "missionary_name", label: "Missionary Full Name", placeholder: "Elder / Sister Surname", type: "text" },
-        { id: "username", label: "App Username", placeholder: "Username registered in the app", type: "text" },
-        { id: "correct_email", label: "Correct Missionary Email", placeholder: "correct@missionary.org", type: "email" }
+      "id": "app_wrong_email",
+      "name": "App Wrong Email Fix",
+      "category": "HSBC App",
+      "defaultContact": "mission_cards",
+      "subject": "HSBC App Email Correction – {{missionary_name}}",
+      "fields": [
+        {
+          "id": "missionary_name",
+          "label": "Missionary Full Name",
+          "placeholder": "Elder / Sister Surname",
+          "type": "text"
+        },
+        {
+          "id": "username",
+          "label": "App Username",
+          "placeholder": "Username registered in the app",
+          "type": "text"
+        },
+        {
+          "id": "correct_email",
+          "label": "Correct Missionary Email",
+          "placeholder": "correct@missionary.org",
+          "type": "email"
+        }
       ],
-      body: `Dear Mission Cards Team,
-
-The following missionary entered the wrong email address during HSBC CentreSuite app registration. Kindly update the email on file to the correct one.
-
-Missionary full name: {{missionary_name}}
-App Username: {{username}}
-Correct Email: {{correct_email}}
-The Mission Name: {{SYS_MISSION}}
-The Mission Finance Secretary's name: {{SYS_SECRETARY}}
-Phone: {{SYS_PHONE}}
-Secretary email with the correct domain: {{SYS_EMAIL}}`
+      "body": "Dear Mission Cards Team,\n\nThe following missionary entered the wrong email address during HSBC CentreSuite app registration. Kindly update the email on file to the correct one.\n\nMissionary full name: {{missionary_name}}\nApp Username: {{username}}\nCorrect Email: {{correct_email}}\nThe Mission Name: {{SYS_MISSION}}\nThe Mission Finance Secretary's name: {{SYS_SECRETARY}}\nPhone: {{SYS_PHONE}}\nSecretary email with the correct domain: {{SYS_EMAIL}}"
     },
     {
-      id: "fund_companion",
-      name: "Fund via Companion's Card",
-      category: "Funding",
-      defaultContact: "msf_exception",
-      subject: "Companion Funding Limit – {{missionary_name}}",
-      fields: [
-        { id: "missionary_name", label: "Missionary Needing Funds", placeholder: "Elder / Sister Surname", type: "text" },
-        { id: "missionary_email", label: "Missionary Email", placeholder: "name@missionary.org", type: "email" },
-        { id: "companion_name", label: "Companion's Full Name", placeholder: "Elder / Sister Surname", type: "text" },
-        { id: "reason", label: "Reason for Companion Funding", placeholder: "e.g. Card lost, awaiting replacement", type: "text" }
+      "id": "fund_companion",
+      "name": "Fund via Companion's Card",
+      "category": "Funding",
+      "defaultContact": "msf_exception",
+      "subject": "Companion Funding Limit – {{missionary_name}}",
+      "fields": [
+        {
+          "id": "missionary_name",
+          "label": "Missionary Needing Funds",
+          "placeholder": "Elder / Sister Surname",
+          "type": "text"
+        },
+        {
+          "id": "missionary_email",
+          "label": "Missionary Email",
+          "placeholder": "name@missionary.org",
+          "type": "email"
+        },
+        {
+          "id": "companion_name",
+          "label": "Companion's Full Name",
+          "placeholder": "Elder / Sister Surname",
+          "type": "text"
+        },
+        {
+          "id": "reason",
+          "label": "Reason for Companion Funding",
+          "placeholder": "e.g. Card lost, awaiting replacement",
+          "type": "text"
+        }
       ],
-      body: `Dear MSF Card Exception Team,
-
-We need to fund a missionary via their companion's card for the reason stated below. Kindly raise the companion's funding limit accordingly and advise on the process.
-
-Missionary requiring funds: {{missionary_name}}
-Missionary's Email: {{missionary_email}}
-Companion's Name: {{companion_name}}
-Reason: {{reason}}
-The Mission Name: {{SYS_MISSION}}
-The Mission Finance Secretary's name: {{SYS_SECRETARY}}
-Phone: {{SYS_PHONE}}
-Secretary email with the correct domain: {{SYS_EMAIL}}`
+      "body": "Dear MSF Card Exception Team,\n\nWe need to fund a missionary via their companion's card for the reason stated below. Kindly raise the companion's funding limit accordingly and advise on the process.\n\nMissionary requiring funds: {{missionary_name}}\nMissionary's Email: {{missionary_email}}\nCompanion's Name: {{companion_name}}\nReason: {{reason}}\nThe Mission Name: {{SYS_MISSION}}\nThe Mission Finance Secretary's name: {{SYS_SECRETARY}}\nPhone: {{SYS_PHONE}}\nSecretary email with the correct domain: {{SYS_EMAIL}}"
     },
     {
-      id: "funding_issue",
-      name: "Funding Issue",
-      category: "Funding",
-      defaultContact: "gsd_mission",
-      subject: "MSF Funding Issue – {{SYS_MISSION}}",
-      fields: [
-        { id: "issue_description", label: "Describe the Funding Issue", placeholder: "Describe the issue in detail…", type: "textarea" },
-        { id: "missionary_name", label: "Missionary Affected (if applicable)", placeholder: "Elder / Sister Surname or 'All missionaries'", type: "text" }
+      "id": "tpl_1775462205700",
+      "name": "Working Fund Recon",
+      "category": "Recons",
+      "defaultContact": "contact_1775462040927",
+      "subject": "Working Fund Request - {{date}}",
+      "fields": [
+        {
+          "id": "field_1",
+          "label": "date",
+          "placeholder": "1 Jan 2000",
+          "type": "date"
+        }
       ],
-      body: `Dear GSD Mission Support Team,
-
-We are experiencing a funding issue with the MSF cards in our mission. Details below:
-
-Issue: {{issue_description}}
-
-Missionary(ies) affected: {{missionary_name}}
-The Mission Name: {{SYS_MISSION}}
-The Mission Finance Secretary's name: {{SYS_SECRETARY}}
-Phone: {{SYS_PHONE}}
-Secretary email with the correct domain: {{SYS_EMAIL}}
-
-Please advise on how to resolve this issue.`
+      "body": "Greetings,\n\nPlease find attached all the necessary documentation for our working fund request.\n\nRegards,"
+    },
+    {
+      "id": "tpl_1775462379399",
+      "name": "Aetna Claims",
+      "category": "Aetna",
+      "defaultContact": "contact_1775462286281",
+      "subject": "{{SYS_MISSION}} - Missionary Claim Submission",
+      "fields": [],
+      "body": "Greetings, \n\nPlease find the claim submission spreadsheet and supporting receipts attached for reimbursement. Note: the documents are in Portuguese.\n\nRegards,"
     }
   ]
-};
-
+}
 // ─── STATE ───
 let setup = {};
 let contacts = [];
